@@ -2,13 +2,11 @@ package ar.edu.utn.diplomatura.productservice.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.utn.diplomatura.productservice.dto.*;
 import ar.edu.utn.diplomatura.productservice.entity.CajaAhorro;
 import ar.edu.utn.diplomatura.productservice.entity.CuentaCorriente;
-import ar.edu.utn.diplomatura.productservice.entity.Usuario;
 import ar.edu.utn.diplomatura.productservice.exception.*;
 import ar.edu.utn.diplomatura.productservice.mapper.CuentaMapper;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,6 @@ import static ar.edu.utn.diplomatura.productservice.Constants.*;
 public class CuentaService {
 
     private final CuentaRepository cuentaRepository;
-    //private final UsuarioService usuarioService;
     private final CuentaMapper cuentaMapper;
 
     /** Inyeccion por constructor: Spring busca esos dos beans en el contenedor y los pasa como argumentos. **/
@@ -45,7 +42,7 @@ public class CuentaService {
     public List<CuentaDTO> listarTodos(Long clienteId) {
         return cuentaRepository.findAllByClienteId(clienteId)
                 .stream()
-                .map(cuentaMapper::toDTO)
+                .map(cuentaMapper::toCuentaDTO)
                 .toList();
     }
 
@@ -63,18 +60,16 @@ public class CuentaService {
         return cuentaRepository
                 .findByClienteIdAndNumeroCuentaContainingIgnoreCase(clienteId, numeroCuenta)
                 .stream()
-                .map(cuentaMapper::toDTO)
+                .map(cuentaMapper::toCuentaDTO)
                 .toList();
     }
 
     /** Crea una cuenta. */
     public CuentaResponse crear(CuentaRequest request) {
-
-        //Usuario unUsuario = usuarioService.obtenerOFallar(request.usuarioId());
         Long clienteId = request.clienteId();
         String tipoCuenta = request.tipo();
-        BigDecimal limiteDescubierto = request.limiteDescubierto(); //Objects.requireNonNullElse(request.limiteDescubierto(), BigDecimal.ZERO);
-        BigDecimal porcentajeTasaInteresAnual = request.porcentajeTasaInteresAnual(); //Objects.requireNonNullElse(request.porcentajeTasaInteresAnual(), BigDecimal.ZERO);
+        BigDecimal limiteDescubierto = request.limiteDescubierto();
+        BigDecimal porcentajeTasaInteresAnual = request.porcentajeTasaInteresAnual();
 
         validarCamposSegunTipoCuenta(tipoCuenta, limiteDescubierto, porcentajeTasaInteresAnual);
 
@@ -156,7 +151,7 @@ public class CuentaService {
     public CuentaDTO acreditarSaldo(Long id, Long clienteId, BigDecimal unSaldo) {
         Cuenta cuentaExistente = obtenerOFallar(id, clienteId);
         cuentaExistente.ingresarSaldo(unSaldo);
-        return cuentaMapper.toDTO(
+        return cuentaMapper.toCuentaDTO(
                 cuentaRepository.save(cuentaExistente)
         );
     }
@@ -166,7 +161,7 @@ public class CuentaService {
     public CuentaDTO retirarSaldo(Long id, Long clienteId, BigDecimal unSaldo) {
         Cuenta cuentaExistente = obtenerOFallar(id, clienteId);
         cuentaExistente.retirarSaldo(unSaldo);
-        return cuentaMapper.toDTO(
+        return cuentaMapper.toCuentaDTO(
                 cuentaRepository.save(cuentaExistente)
         );
     }

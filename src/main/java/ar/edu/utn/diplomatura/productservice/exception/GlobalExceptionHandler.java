@@ -15,12 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlobalExceptionHandler {
 
-//    // Excepciones de Feign (microservicios externos)
-//    @ExceptionHandler(FeignException.NotFound.class)
-//    public ResponseEntity<Void> manejarFeignNotFound(FeignException.NotFound e) {
-//        return ResponseEntity.notFound().build();
-//    }
-
     // Excepciones propias del dominio
     @ExceptionHandler(UsuarioNoEncontradoException.class)
     public ResponseEntity<Map<String, String>> manejarUsuarioNoEncontrado( UsuarioNoEncontradoException ex, HttpServletRequest request) {

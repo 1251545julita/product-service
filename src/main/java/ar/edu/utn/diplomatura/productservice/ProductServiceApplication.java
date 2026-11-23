@@ -2,7 +2,6 @@ package ar.edu.utn.diplomatura.productservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * Punto de entrada. Ejecutar el main de esta clase levanta la aplicacion.
@@ -18,7 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * ar.edu.utn.diplomatura.cuentasusuarios o en un subpaquete.
  */
 @SpringBootApplication
-//@EnableFeignClients
 public class ProductServiceApplication {
 
     public static void main(String[] args) {

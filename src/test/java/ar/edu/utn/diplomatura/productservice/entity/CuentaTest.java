@@ -16,15 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class CuentaTest {
 
-    private Usuario titular;
     private CajaAhorro caja;
     private CuentaCorriente corriente;
 
     @BeforeEach
     void setUp() {
-        titular = new Usuario("Ana", "Gomez", "20123456", "ana@mail.com");
-        caja = new CajaAhorro("000000000001", new BigDecimal("100.00"), TIPO_MONEDA_PESOS, titular, new BigDecimal("12.00"));
-        corriente = new CuentaCorriente("000000000002", BigDecimal.ZERO, TIPO_MONEDA_PESOS, titular, new BigDecimal("1000.00"));
+        caja = new CajaAhorro("000000000001", new BigDecimal("100.00"), TIPO_MONEDA_PESOS, 1L, new BigDecimal("12.00"));
+        corriente = new CuentaCorriente("000000000002", BigDecimal.ZERO, TIPO_MONEDA_PESOS, 2L, new BigDecimal("1000.00"));
     }
 
     private static void assertMonto(String esperado, BigDecimal real) {
@@ -39,7 +37,7 @@ class CuentaTest {
     void cuentaNuevaQuedaHabilitada() {
         assertTrue(caja.isHabilitada());
         assertNotNull(caja.getFechaDeApertura());
-        assertSame(titular, caja.getUsuario());
+        assertNotNull(caja.getClienteId());
     }
 
     @Test

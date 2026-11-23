@@ -3,12 +3,10 @@ package ar.edu.utn.diplomatura.productservice.controller;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
-//import ar.edu.utn.diplomatura.productservice.dto.ClienteDTO;
+
 import ar.edu.utn.diplomatura.productservice.dto.*;
 import ar.edu.utn.diplomatura.productservice.exception.*;
-//import feign.FeignException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,10 +34,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class CuentaController {
 
     private final CuentaService cuentaService;
-    //private final ClientesClient clientesClient;
 
     public CuentaController(CuentaService cuentaService) {
-        //this.clientesClient = clientesClient;
         this.cuentaService = cuentaService;
     }
 
@@ -115,18 +111,10 @@ public class CuentaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CuentaResponse> crear(@Valid @RequestBody CuentaRequest request) {
-//        try {
             CuentaResponse creada = cuentaService.crear(request);
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}").buildAndExpand(creada.id()).toUri();
             return ResponseEntity.created(location).body(creada);
-//        } catch (TipoCuentaInvalidosException e) {
-//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-//        } catch (UsuarioNoEncontradoException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-//        } catch (CamposInvalidosException e) {
-//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-//        }
     }
 
     /** PUT /cuentas/clientes/1/2
@@ -146,13 +134,7 @@ public class CuentaController {
                                                      @Parameter(description = "Identificador del cliente", example = "1")
                                                      @PathVariable Long clienteId,
                                                      @Valid @RequestBody CuentaUpdateRequest datosNuevos) {
-//        try {
-                return ResponseEntity.ok(cuentaService.actualizar(id, clienteId, datosNuevos));
-//        } catch (CuentaNoEncontradaException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-//        } catch (CamposInvalidosException e) {
-//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-//        }
+           return ResponseEntity.ok(cuentaService.actualizar(id, clienteId, datosNuevos));
     }
 
 
@@ -193,13 +175,7 @@ public class CuentaController {
     @ApiResponse(responseCode = "404", description = "La cuenta no existe.")
     @PostMapping("/clientes/{clienteId}/{id}/acreditaciones")
     public ResponseEntity<?> acreditar(@PathVariable Long id, @PathVariable Long clienteId, @RequestParam BigDecimal saldo) {
-      //  try {
             return ResponseEntity.ok(cuentaService.acreditarSaldo(id, clienteId, saldo));
-//        } catch (SaldoInvalidoException e) {
-//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));            // 400
-//        } catch (CuentaNoEncontradaException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage())); // 404
-//        }
     }
 
     /** POST /cuentas/1/1/retiros?saldo=1000
@@ -214,15 +190,7 @@ public class CuentaController {
     @ApiResponse(responseCode = "409", description = "Saldo insuficiente.")
     @PostMapping("/clientes/{clienteId}/{id}/retiros")
     public ResponseEntity<?> retirar(@PathVariable Long id, @PathVariable Long clienteId, @RequestParam BigDecimal saldo) {
-//        try {
             return ResponseEntity.ok(cuentaService.retirarSaldo(id, clienteId, saldo));
-//        } catch (SaldoInvalidoException e) {
-//            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-//        } catch (CuentaNoEncontradaException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-//        } catch (SaldoInsuficienteException e) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", e.getMessage()));
-//        }
     }
 
     /**
@@ -240,40 +208,4 @@ public class CuentaController {
                                                    @PathVariable Long id) {
         return ResponseEntity.ok(cuentaService.consultarSaldo(clienteId, id));
     }
-
-    /** URLs para el manejo de los clientes bancarios **/
-
-    /** GET /cuentas/clientes: le pide la lista al servicio de clientes bancarios y la devuelve tal cual. */
-//    @GetMapping("/clientes")
-//    public List<ClienteDTO> listarClientes(@RequestParam(required = false) String apellido) {
-//        if (apellido == null || apellido.isBlank()) {
-//            return clientesClient.listar();
-//        }
-//        return clientesClient.buscarPorApellido(apellido);
-//    }
-//
-//    /** GET /cuentas/clientes/1 */
-//    @GetMapping("/clientes/{id}")
-//    public ResponseEntity<ClienteDTO> obtenerCliente(@PathVariable Long id) {
-//        try {
-//            return ResponseEntity.ok(clientesClient.obtener(id));
-//        } catch (FeignException.NotFound e) {
-//            // El servicio de clientes contesto 404 y Feign lo convirtio en esta excepcion.
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
-    /** POST /cuentas  con { "clienteId": 1, "importe": 15000, "concepto": "Sueldo octubre" } */
-//    @PostMapping
-//    public ResponseEntity<PagoResponse> pagar(@RequestBody PagoRequest pedido) {
-//        try {
-//            PagoResponse respuesta = pagosService.registrar(pedido);
-//            if (respuesta.estado().equals("RECHAZADO")) {
-//                return ResponseEntity.unprocessableEntity().body(respuesta); // 422
-//            }
-//            return ResponseEntity.status(HttpStatus.CREATED).body(respuesta); // 201
-//        } catch (FeignException.NotFound e) {
-//            return ResponseEntity.notFound().build(); // 404
-//        }
-//    }
 }

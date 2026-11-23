@@ -11,23 +11,20 @@ import java.math.BigDecimal;
 @Component
 public class CuentaMapper {
 
-    public CuentaDTO toDTO(Cuenta cuenta) {
+    public CuentaDTO toCuentaDTO(Cuenta cuenta) {
 
         String tipoCuenta;
         BigDecimal limiteDescubierto = null;
         BigDecimal porcentajeTasaInteresAnual = null;
 
-        if (cuenta instanceof CuentaCorriente cc) {
+        if (cuenta instanceof CuentaCorriente unaCuentaCorriente) {
             tipoCuenta = "CUENTA_CORRIENTE";
-            limiteDescubierto = cc.getLimiteDescubierto();
-        } else if (cuenta instanceof CajaAhorro ca) {
+            limiteDescubierto = unaCuentaCorriente.getLimiteDescubierto();
+        } else if (cuenta instanceof CajaAhorro unaCajaDeAhorro) {
             tipoCuenta = "CAJA_AHORRO";
-            porcentajeTasaInteresAnual =
-                    ca.getPorcentajeTasaInteresAnual();
+            porcentajeTasaInteresAnual = unaCajaDeAhorro.getPorcentajeTasaInteresAnual();
         } else {
-            throw new IllegalArgumentException(
-                    "Tipo de cuenta desconocido"
-            );
+            throw new IllegalArgumentException("Tipo de cuenta desconocido");
         }
 
         return new CuentaDTO(
