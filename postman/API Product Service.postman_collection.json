@@ -63,14 +63,6 @@
             "cuentas",
             "clientes",
             "1"
-          ],
-          "query": [
-            {
-              "key": "numeroCuenta",
-              "value": "123456789012",
-              "description": "Número de cuenta a buscar (coincidencia parcial). Opcional.",
-              "disabled": true
-            }
           ]
         },
         "description": "## Lista las cuentas de un cliente\n\nDevuelve todas las cuentas asociadas al cliente.\n\nCon el parámetro `numeroCuenta` filtra por coincidencia parcial, sin distinguir mayúsculas.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n\n**Query params**\n\n| Nombre | Requerido | Descripción | Ejemplo |\n|---|---|---|---|\n| numeroCuenta | No | Número de cuenta a buscar | 123456789012 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Lista de cuentas (puede venir vacía) |"
