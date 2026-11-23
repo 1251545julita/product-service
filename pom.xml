@@ -19,13 +19,9 @@
 
     <name>product-service - Microservicio B con base de datos</name>
     <description>
-        API REST en Java (Spring Boot) que simule un sistema básico fintech,
-        que gestione cuentas, integrando:
-        - Programación orientada a objetos
-        - Persistencia en base de datos (MySQL)
-        - Consumo de API externa
-        - Testing unitario
-        - Documentación con Swagger
+        Microservicio de cuentas bancarias (Spring Boot, Java 21):
+        creación y administración de cajas de ahorro y cuentas corrientes asociadas
+        a clientes por clienteId. Es consumido por customer-service mediante OpenFeign.
     </description>
 
     <properties>
