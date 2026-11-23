@@ -1,0 +1,107 @@
+package ar.edu.utn.diplomatura.productservice.entity;
+
+import ar.edu.utn.diplomatura.productservice.exception.SaldoInsuficienteException;
+import ar.edu.utn.diplomatura.productservice.exception.SaldoInvalidoException;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * Una cuenta del banco.
+ *
+ * @Entity le dice a JPA que esta clase se guarda en una tabla:
+ * la clase es la tabla, cada atributo es una columna y cada objeto es una fila.
+ */
+@Entity
+@Table(name = "cuentas")
+public abstract class Cuenta implements Operable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true)
+    private String numeroCuenta;
+    private BigDecimal saldo = BigDecimal.ZERO; // Sino con el constructor vacío y saldo null, saldo.add(monto) en ingresarMonto fallaría con NullPointerException.
+    private String moneda; // ARS, USD
+    private LocalDateTime fechaDeApertura;
+    private boolean habilitada; // Si alguna vez el valor es null, isHabilitada() no falla con NullPointerException al convertirlo.
+    @Column(nullable = false)
+    private Long clienteId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "usuario_id", nullable = false)
+//    private Usuario usuario;
+
+    /** Constructor vacio: JPA lo necesita para reconstruir el objeto. */
+    public Cuenta() {
+    }
+
+    public Cuenta(String numeroCuenta, BigDecimal saldo, String moneda, Long clienteId) {
+        this.numeroCuenta = numeroCuenta;
+        this.saldo = saldo;
+        this.moneda = moneda;
+        this.fechaDeApertura = LocalDateTime.now();
+        this.habilitada = true;
+        this.clienteId = clienteId;
+        //this.usuario = usuario;
+    }
+
+    // Getters y setters: se usan para armar el JSON de las respuestas.
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNumeroCuenta() { return numeroCuenta;}
+    public void setNumeroCuenta(String numeroCuenta) { this.numeroCuenta = numeroCuenta; }
+
+    public LocalDateTime getFechaDeApertura() { return fechaDeApertura; }
+    public void setFechaDeApertura(LocalDateTime fechaDeApertura) { this.fechaDeApertura = fechaDeApertura; }
+
+    public BigDecimal getSaldo() { return saldo; }
+    public void setSaldo(BigDecimal saldo) { this.saldo = saldo; }
+
+    public String getMoneda() { return moneda; }
+    public void setMoneda(String moneda) { this.moneda = moneda; }
+
+    public boolean isHabilitada() { return habilitada; }
+    public void setHabilitada(boolean habilitada) { this.habilitada = habilitada; }
+
+//    public Usuario getUsuario() { return usuario; }
+//    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Long getClienteId() { return clienteId; }
+    public void setClienteId(Long clienteId) { this.clienteId = clienteId; }
+
+    //Additional methods
+
+    public abstract String getTipoCuenta();
+
+    @Override
+    public abstract BigDecimal obtenerSaldoDisponible();
+
+    @Override
+    public void ingresarSaldo(BigDecimal unSaldo) {
+        validarSaldo(unSaldo);
+        saldo = saldo.add(unSaldo);
+    }
+
+    @Override
+    public void retirarSaldo(BigDecimal unSaldo) {
+        validarSaldo(unSaldo);
+        if (unSaldo.compareTo(obtenerSaldoDisponible()) > 0) {
+            throw new SaldoInsuficienteException(numeroCuenta, obtenerSaldoDisponible(), unSaldo);
+        }
+        saldo = saldo.subtract(unSaldo);
+    }
+
+    private void validarSaldo(BigDecimal unSaldo) {
+        if (unSaldo == null || unSaldo.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new SaldoInvalidoException(unSaldo);
+        }
+    }
+}

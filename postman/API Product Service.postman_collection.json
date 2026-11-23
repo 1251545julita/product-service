@@ -1,0 +1,544 @@
+{
+  "info": {
+    "_postman_id": "27d1cb5c-84cc-452d-bf69-3dfb63c06fa0",
+    "name": "API Product Service",
+    "description": "Colección de operaciones del controller de cuentas (`/cuentas`). Cada request incluye en la pestaña **Docs** su descripción, parámetros y respuestas, y un ejemplo en el título.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4361231"
+  },
+  "item": [
+    {
+      "name": "1. GET /cuentas -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Lista todas las cuentas. Siempre 200, aunque la lista venga vacia."
+      },
+      "response": []
+    },
+    {
+      "name": "2. GET /cuentas?numeroCuenta=123456789012 -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas?numeroCuenta=123456789012",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ],
+          "query": [
+            {
+              "key": "numeroCuenta",
+              "value": "123456789012"
+            }
+          ]
+        },
+        "description": "Filtro por query string (numeroCuenta). Si no hay coincidencias devuelve 200 con lista vacia, NO 404."
+      },
+      "response": []
+    },
+    {
+      "name": "3. GET /cuentas/clientes/1 -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1"
+          ],
+          "query": [
+            {
+              "key": "numeroCuenta",
+              "value": "123456789012",
+              "description": "Número de cuenta a buscar (coincidencia parcial). Opcional.",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "## Lista las cuentas de un cliente\n\nDevuelve todas las cuentas asociadas al cliente.\n\nCon el parámetro `numeroCuenta` filtra por coincidencia parcial, sin distinguir mayúsculas.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n\n**Query params**\n\n| Nombre | Requerido | Descripción | Ejemplo |\n|---|---|---|---|\n| numeroCuenta | No | Número de cuenta a buscar | 123456789012 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Lista de cuentas (puede venir vacía) |"
+      },
+      "response": []
+    },
+    {
+      "name": "4. GET /cuentas/clientes/1/1 -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1"
+          ]
+        },
+        "description": "## Obtener una cuenta por su id\n\nDevuelve los datos de la cuenta que coincide con el id indicado. Si no existe una cuenta con ese id, responde 404.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 1 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Cuenta encontrada |\n| 404 | La cuenta no existe o no pertenece al cliente buscado. |"
+      },
+      "response": []
+    },
+    {
+      "name": "5. POST /cuentas CA valida -> 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Caja de Ahorro\",\n  \"moneda\": \"USD\",\n  \"clienteId\": 1,\n  \"saldoInicial\": 0.00,\n  \"porcentajeTasaInteresAnual\": 16.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Crea una cuenta tipo Caja de Ahorro (CA). Esperado: 201 Created. Este pedido NO se puede hacer desde la barra del navegador."
+      },
+      "response": []
+    },
+    {
+      "name": "6. POST /cuentas CAhoro invalida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tipo\": \"Caja de Ahoro\",\r\n  \"moneda\": \"USD\",\r\n  \"clienteId\": \"1\",\r\n  \"saldoInicial\": 0.00,\r\n  \"limiteDescubierto\": 1000000.00\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body con otro tipoCuenta que que no sea Caja de Ahorro o Cuenta Corriente. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "7. POST /cuentas CA invalida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tipo\": \"Caja de Ahorro\",\r\n  \"moneda\": \"USD\",\r\n  \"clienteId\": \"1\",\r\n  \"saldoInicial\": 0.00,\r\n  \"limiteDescubierto\": 1000000.00\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body de Caja de Ahorro (CA) con limiteDescubierto. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "8. POST /cuentas CC valida -> 201",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"clienteId\": \"1\",\n  \"saldoInicial\": 0.00,\n  \"limiteDescubierto\": 1000000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Crea una cuenta tipo Cuenta Corriente (CC). Esperado: 201 Created. Este pedido NO se puede hacer desde la barra del navegador."
+      },
+      "response": []
+    },
+    {
+      "name": "9. POST /cuentas CC inválida -> 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tipo\": \"Cuenta Corriente\",\n  \"moneda\": \"USD\",\n  \"clienteId\": \"1\",\n  \"saldoInicial\": 0.00,\n  \"porcentajeTasaInteresAnual\": 17.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas"
+          ]
+        },
+        "description": "Body de Cuenta Corriente (CC) con limiteDescubierto. Esperado: 400 Bad Request. La ruta esta bien; el pedido, no."
+      },
+      "response": []
+    },
+    {
+      "name": "10. PUT /cuentas/clientes/1/1 CC -> 400",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"porcentajeTasaAnual\": 10.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1"
+          ]
+        },
+        "description": "Actualiza la cuenta 1. Con /cuentas/999 devuelve 404."
+      },
+      "response": []
+    },
+    {
+      "name": "11. PUT /cuentas/clientes/1/1 CC -> 200",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"limiteDescubierto\": 750000.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1"
+          ]
+        },
+        "description": "Trata de actualiza la cuenta tipo CC con id 1 con error de campo para CA."
+      },
+      "response": []
+    },
+    {
+      "name": "11. PUT /cuentas/clientes/1/1 CC -> 400",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"porcentajeTasaInteresAnual\": 10.00\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1"
+          ]
+        },
+        "description": "Trata de actualiza la cuenta tipo CC con id 1 con error de campo para CA."
+      },
+      "response": []
+    },
+    {
+      "name": "12. PUT /cuentas/clientes/1/7 -> 200",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"porcentajeTasaInteresAnual\": 6.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/7",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "7"
+          ]
+        },
+        "description": "## Actualiza una cuenta existente\n\nActualiza el `porcentajeTasaInteresAnual` de una Caja de Ahorro o el límite de descubierto de una Cuenta Corriente.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 10 |\n\n**Body (`CuentaUpdateRequest`)**: ejemplo para Caja de Ahorro. *Ajustar los campos al DTO real.*\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Cuenta actualizada. |\n| 404 | Cuenta indicada no encontrada. |\n| 400 | Campos que no corresponden al tipo de cuenta indicado. |"
+      },
+      "response": []
+    },
+    {
+      "name": "13.  DELETE /cuentas/clientes/1/8?modo=logico",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/8?modo=logico",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "8"
+          ],
+          "query": [
+            {
+              "key": "modo",
+              "value": "logico",
+              "description": "logico | fisico (default: logico)"
+            }
+          ]
+        },
+        "description": "## Borra lógica o físicamente una cuenta existente\n\nDeshabilita una cuenta existente en modo `logico` (por defecto). En modo `fisico`, la borra físicamente.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 1 |\n\n**Query params**\n\n| Nombre | Requerido | Valores | Default |\n|---|---|---|---|\n| modo | No | `logico`, `fisico` | `logico` |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 204 | Cuenta deshabilitada. |\n| 404 | Cuenta indicada no encontrada o ya se borró. |\n| 400 | El modo debe ser 'logico' o 'fisico'. |"
+      },
+      "response": []
+    },
+    {
+      "name": "14. DELETE /cuentas/clientes/1/8?modo=fisico",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/8?modo=fisico",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "8"
+          ],
+          "query": [
+            {
+              "key": "modo",
+              "value": "fisico",
+              "description": "logico | fisico (default: logico)"
+            }
+          ]
+        },
+        "description": "## Borrado físico de una cuenta\n\nIgual que el borrado lógico pero con `modo=fisico`: elimina el registro de forma definitiva.\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 204 | Cuenta eliminada. |\n| 404 | Cuenta indicada no encontrada o ya se borró. |\n| 400 | El modo debe ser 'logico' o 'fisico'. |"
+      },
+      "response": []
+    },
+    {
+      "name": "10. POST /cuentas/clientes/1/1/acreditaciones?saldo=500 -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1/acreditaciones?saldo=700",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1",
+            "acreditaciones"
+          ],
+          "query": [
+            {
+              "key": "saldo",
+              "value": "700",
+              "description": "Monto a acreditar"
+            }
+          ]
+        },
+        "description": "## Ingresar dinero en una cuenta\n\nAcredita el monto indicado en la cuenta y devuelve la cuenta con el saldo actualizado.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 1 |\n\n**Query params**\n\n| Nombre | Requerido | Descripción | Ejemplo |\n|---|---|---|---|\n| saldo | Sí | Monto a acreditar (BigDecimal) | 500 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Acreditación realizada; devuelve la cuenta con el saldo actualizado. |\n| 400 | Monto inválido. |\n| 404 | La cuenta no existe. |"
+      },
+      "response": []
+    },
+    {
+      "name": "11. POST /cuentas/clientes/1/1/retiros?saldo=3000 -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1/retiros?saldo=3000",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1",
+            "retiros"
+          ],
+          "query": [
+            {
+              "key": "saldo",
+              "value": "3000",
+              "description": "Monto a retirar"
+            }
+          ]
+        },
+        "description": "## Retirar dinero de una cuenta\n\nRetira el monto indicado. Una cuenta corriente puede quedar en descubierto hasta su límite.\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 1 |\n\n**Query params**\n\n| Nombre | Requerido | Descripción | Ejemplo |\n|---|---|---|---|\n| saldo | Sí | Monto a retirar (BigDecimal) | 1000 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Retiro realizado; devuelve la cuenta con el saldo actualizado. |\n| 404 | La cuenta no existe. |\n| 409 | Saldo insuficiente. |"
+      },
+      "response": []
+    },
+    {
+      "name": "12. GET /cuentas/clientes/1/1/saldo -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cuentas/clientes/1/1/saldo",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cuentas",
+            "clientes",
+            "1",
+            "1",
+            "saldo"
+          ]
+        },
+        "description": "## Consulta el saldo de una cuenta de un cliente\n\nDevuelve el identificador, número de cuenta, saldo disponible y moneda (`SaldoDTO`).\n\n**Path params**\n\n| Nombre | Descripción | Ejemplo |\n|---|---|---|\n| clienteId | Identificador del cliente | 1 |\n| id | Identificador de la cuenta | 10 |\n\n**Respuestas**\n\n| Código | Descripción |\n|---|---|\n| 200 | Saldo consultado correctamente |\n| 404 | Cuenta inexistente o no pertenece al cliente |"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
