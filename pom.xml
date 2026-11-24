@@ -17,7 +17,7 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>product-service - Microservicio B con base de datos</name>
+    <name>product-service - Microservicio A con base de datos</name>
     <description>
         Microservicio de cuentas bancarias (Spring Boot, Java 21):
         creación y administración de cajas de ahorro y cuentas corrientes asociadas
@@ -61,6 +61,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>3.1.1</version>
+        </dependency>
+
+        <dependency>
+        	<groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>

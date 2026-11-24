@@ -1,4 +1,4 @@
-# Application — Product Service — Microservicio B
+# Application — Product Service — Microservicio A
 
 ** Diplomatura en Desarrollo de Software FinTech: IA y Microservicios — UTN / Codeki**
 ** Student: Julita, Jesica R. **
